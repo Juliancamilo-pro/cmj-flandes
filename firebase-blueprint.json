@@ -1,0 +1,241 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "Profile",
+      "description": "Public editorial profile and biographical information for Julian Camilo",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 150 },
+        "motto": { "type": "string", "maxLength": 200 },
+        "bio": { "type": "string", "maxLength": 5000 },
+        "photoUrl": { "type": "string", "maxLength": 1000 },
+        "location": { "type": "string", "maxLength": 100 },
+        "contactEmail": { "type": "string", "maxLength": 150 },
+        "interests": { "type": "array" },
+        "education": { "type": "array" },
+        "trajectory": { "type": "array" },
+        "socialLinks": { "type": "object" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "motto"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "Editorial article or opinion piece",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 250 },
+        "subtitle": { "type": "string", "maxLength": 500 },
+        "slug": { "type": "string", "maxLength": 150 },
+        "content": { "type": "string", "maxLength": 100000 },
+        "coverImageUrl": { "type": "string", "maxLength": 1000 },
+        "coverImageCaption": { "type": "string", "maxLength": 200 },
+        "categoryId": { "type": "string", "maxLength": 100 },
+        "categoryName": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["draft", "published", "scheduled"] },
+        "allowComments": { "type": "boolean" },
+        "views": { "type": "number" },
+        "readingMinutes": { "type": "number" },
+        "featured": { "type": "boolean" },
+        "publishedAt": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "authorName": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["title", "slug", "content", "status", "categoryName"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Editorial publication categories",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 60 },
+        "slug": { "type": "string", "maxLength": 60 },
+        "description": { "type": "string", "maxLength": 300 },
+        "color": { "type": "string", "maxLength": 30 },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "slug"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Visitor comments on articles",
+      "type": "object",
+      "properties": {
+        "articleId": { "type": "string", "maxLength": 100 },
+        "articleTitle": { "type": "string", "maxLength": 250 },
+        "authorName": { "type": "string", "maxLength": 80 },
+        "authorEmail": { "type": "string", "maxLength": 120 },
+        "content": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["articleId", "authorName", "content", "status"]
+    },
+    "DailyAnalytics": {
+      "title": "DailyAnalytics",
+      "description": "Aggregated daily visitor statistics",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "maxLength": 20 },
+        "visits": { "type": "number" },
+        "articleViews": { "type": "object" },
+        "categoryViews": { "type": "object" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["date", "visits"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Platform global configuration",
+      "type": "object",
+      "properties": {
+        "siteTitle": { "type": "string", "maxLength": 100 },
+        "siteMotto": { "type": "string", "maxLength": 200 },
+        "moderationEnabled": { "type": "boolean" },
+        "allowCommentsGlobally": { "type": "boolean" },
+        "contactEmail": { "type": "string", "maxLength": 150 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["siteTitle", "moderationEnabled"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Public contact form submission",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "subject": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 4000 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "email", "message"]
+    },
+    "Subscriber": {
+      "title": "Subscriber",
+      "description": "Newsletter subscriber email",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email"]
+    }
+  },
+  "firestore": {
+    "/subscribers/{subscriberId}": {
+      "schema": { "$ref": "#/entities/Subscriber" },
+      "description": "Newsletter subscribers"
+    },
+    "/profile/{profileId}": {
+      "schema": { "$ref": "#/entities/Profile" },
+      "description": "Profile information for Julian Camilo"
+    },
+    "/articles/{articleId}": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "Published and draft articles"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Editorial categories"
+    },
+    "/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Article comments"
+    },
+    "/analytics/{dateId}": {
+      "schema": { "$ref": "#/entities/DailyAnalytics" },
+      "description": "Daily visit and view aggregations"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Settings" },
+      "description": "Platform settings"
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Direct contact inquiries"
+    },
+    "/admins/{adminUid}": {
+      "schema": {
+        "title": "Admin",
+        "description": "Authorized admin users",
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "description": "Registered administrator identifiers"
+    },
+    "/author_profiles/{profileId}": {
+      "schema": {
+        "title": "AuthorProfile",
+        "description": "Author profiles with explicit public visibility flags and Colombian verification status",
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string", "maxLength": 120 },
+          "email": { "type": "string", "maxLength": 150 },
+          "verificationStatus": { "type": "string" }
+        },
+        "required": ["fullName"]
+      },
+      "description": "Author profiles and verification states"
+    },
+    "/citizen_polls/{pollId}": {
+      "schema": {
+        "title": "CitizenPoll",
+        "description": "Citizen participation polls",
+        "type": "object",
+        "properties": {
+          "question": { "type": "string", "maxLength": 300 },
+          "active": { "type": "boolean" }
+        },
+        "required": ["question"]
+      },
+      "description": "Citizen polls"
+    },
+    "/editorial_events/{eventId}": {
+      "schema": {
+        "title": "EditorialEvent",
+        "description": "Editorial and civic events calendar",
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "maxLength": 200 },
+          "eventDate": { "type": "string", "maxLength": 40 }
+        },
+        "required": ["title", "eventDate"]
+      },
+      "description": "Events calendar"
+    },
+    "/correction_requests/{requestId}": {
+      "schema": {
+        "title": "CorrectionRequest",
+        "description": "Reader correction and clarification requests",
+        "type": "object",
+        "properties": {
+          "articleId": { "type": "string", "maxLength": 100 },
+          "requesterName": { "type": "string", "maxLength": 100 },
+          "description": { "type": "string", "maxLength": 1500 }
+        },
+        "required": ["articleId", "requesterName", "description"]
+      },
+      "description": "Editorial correction requests"
+    },
+    "/collaborator_recognitions/{recId}": {
+      "schema": {
+        "title": "CollaboratorRecognition",
+        "description": "Editorial recognitions for collaborators",
+        "type": "object",
+        "properties": {
+          "collaboratorName": { "type": "string", "maxLength": 120 },
+          "badgeTitle": { "type": "string", "maxLength": 120 }
+        },
+        "required": ["collaboratorName", "badgeTitle"]
+      },
+      "description": "Collaborator recognitions"
+    }
+  }
+}
